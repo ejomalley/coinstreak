@@ -43,11 +43,6 @@ export default function Home() {
     localStorageSet('heads', amt)
   }
 
-  // const changeTails = (amt) => {
-  //   setTails(amt)
-  //   localStorageSet('tails', amt)
-  // }
-
   const changeTailsStreak = (amt) => {
     setTailsStreak(amt)
     localStorageSet('tailsStreak', amt)
@@ -79,6 +74,16 @@ export default function Home() {
     console.log("got to handler")
   }
 
+  const handleResetButton = () => {
+    changeFlips(0)
+    changeStreak(0)
+    changeHighScore(0)
+    changeCoinState('heads')
+    changeHeads(0)
+    changeTailsStreak(0)
+    changeShowOdds(false)
+  }
+
   const coinClick = () => {
     changeFlips(flips+1)
     if (Math.random() > .5) {
@@ -89,7 +94,6 @@ export default function Home() {
     }
     else {
       changeCoinState("tails")
-      // changeTails(tails+1)
       changeStreak(0)
       changeTailsStreak(tailsStreak+1)
     }
@@ -109,9 +113,10 @@ export default function Home() {
         { showOdds ? <p className={font}>odds of next head: { (coinState==='heads') ? +((Math.pow(.5, streak+1))*100).toPrecision(4) : 
           +((1 - (Math.pow(0.5, tailsStreak)))*100).toPrecision(4) }%</p> : null }
       </div>
-      <div className='flex self-center'>
-        <input type='checkbox' value='show odds' onChange={handleShowOddsBox}></input>
+      <div className='flex self-center items-center'>
+        <input type='checkbox' checked={!!showOdds} defaultChecked={false} onChange={handleShowOddsBox}></input>
         <p className='pl-2'>Show Odds</p>
+        <button className='bg-gray-50 w-15 self-center ml-40' onClick={handleResetButton}>Reset</button>
       </div>
     </div>
   )
