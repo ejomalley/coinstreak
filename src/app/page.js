@@ -4,23 +4,41 @@ import {useState} from 'react'
 import Image from 'next/image';
 
 export default function Home() {
-  const [flips, setFlips] = useState(0)
-  const [streak, setStreak] = useState(0)
-  const [highScore, setHighScore] = useState(0)
-  const [coinState, setCoinState] = useState("heads")
+  const [flips, setFlips] = useState(+localStorage.getItem('flips') || 0)
+  const [streak, setStreak] = useState(+localStorage.getItem('streak') || 0)
+  const [highScore, setHighScore] = useState(+localStorage.getItem('highScore') || 0)
+  const [coinState, setCoinState] = useState(localStorage.getItem('coinState') || 'heads')
+
+  const changeFlips = (amt) => {
+    setFlips(amt)
+    localStorage.setItem('flips', amt)
+  }
+
+  const changeStreak = (amt) => {
+    setStreak(amt)
+    localStorage.setItem('streak', amt)
+  }
+
+  const changeHighScore = (amt) => {
+    setHighScore(amt)
+    localStorage.setItem('highScore', amt)
+  }
+
+  const changeCoinState = (state) => {
+    setCoinState(state)
+    localStorage.setItem('coinState', state)
+  }
 
   const coinClick = () => {
-    setFlips(flips+1)
-    let flip = Math.random()
-    console.log(`Flip: ${flip} ${flip>.5 ? "heads" : "tails"}`)
-    if (flip > .5) {
-      setCoinState("heads")
-      setStreak(streak+1)
-      if (streak+1 > highScore) { setHighScore(streak+1) }
+    changeFlips(flips+1)
+    if (Math.random() > .5) {
+      changeCoinState("heads")
+      changeStreak(streak+1)
+      if (streak+1 > highScore) { changeHighScore(streak+1) }
     }
     else {
-      setStreak(0)
-      setCoinState("tails")
+      changeStreak(0)
+      changeCoinState("tails")
     }
   } 
 
