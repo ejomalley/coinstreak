@@ -4,29 +4,35 @@ import {useState} from 'react'
 import Image from 'next/image';
 
 export default function Home() {
-  const [flips, setFlips] = useState(+localStorage.getItem('flips') || 0)
-  const [streak, setStreak] = useState(+localStorage.getItem('streak') || 0)
-  const [highScore, setHighScore] = useState(+localStorage.getItem('highScore') || 0)
-  const [coinState, setCoinState] = useState(localStorage.getItem('coinState') || 'heads')
+  const localStorageGet = (key) => {
+    if (typeof localStorage !== 'undefined') return localStorage.getItem(key)
+  }
+  const localStorageSet = (key, value) => {
+    if (typeof localStorage !== 'undefined') localStorage.setItem(key, value)
+  }
+  const [flips, setFlips] = useState(+localStorageGet('flips') || 0)
+  const [streak, setStreak] = useState(+localStorageGet('streak') || 0)
+  const [highScore, setHighScore] = useState(+localStorageGet('highScore') || 0)
+  const [coinState, setCoinState] = useState(localStorageGet('coinState') || 'heads')
 
   const changeFlips = (amt) => {
     setFlips(amt)
-    localStorage.setItem('flips', amt)
+    localStorageSet('flips', amt)
   }
 
   const changeStreak = (amt) => {
     setStreak(amt)
-    localStorage.setItem('streak', amt)
+    localStorageSet('streak', amt)
   }
 
   const changeHighScore = (amt) => {
     setHighScore(amt)
-    localStorage.setItem('highScore', amt)
+    localStorageSet('highScore', amt)
   }
 
   const changeCoinState = (state) => {
     setCoinState(state)
-    localStorage.setItem('coinState', state)
+    localStorageSet('coinState', state)
   }
 
   const coinClick = () => {
