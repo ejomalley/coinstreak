@@ -37,7 +37,7 @@ export default function Home() {
     switch(which) {
       case 'flips': setFlips(val); break
       case 'heads': setHeads(val); break
-      case 'streak': setStreak(val); if (val <= highScore) break
+      case 'streak': setStreak(val); if (val > highScore) changeValue('highScore', val); break
       case 'highScore': setHighScore(val); break
       case 'tailsStreak': setTailsStreak(val); break
       case 'coinState': setCoinState(val); break
