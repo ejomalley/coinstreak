@@ -114,7 +114,7 @@ export default function Home() {
           +((1 - (Math.pow(0.5, tailsStreak)))*100).toPrecision(4) }%</p> : null }
       </div>
       <div className='flex self-center items-center'>
-        <input type='checkbox' checked={!!showOdds} defaultChecked={false} onChange={handleShowOddsBox}></input>
+        <input type='checkbox' checked={!!showOdds} onChange={handleShowOddsBox}></input>
         <p className='pl-2'>Show Odds</p>
         <button className='bg-gray-50 w-15 self-center ml-40' onClick={handleResetButton}>Reset</button>
       </div>
