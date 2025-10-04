@@ -5,15 +5,22 @@ import Image from 'next/image';
 
 export default function Home() {
   const localStorageGet = (key) => {
-    if (typeof localStorage !== 'undefined') return localStorage.getItem(key)
+    return (typeof window !== 'undefined') ? localStorage.getItem(key) : undefined
   }
   const localStorageSet = (key, value) => {
-    if (typeof localStorage !== 'undefined') localStorage.setItem(key, value)
+    return (typeof window !== 'undefined') ? localStorage.setItem(key, value) : undefined
   }
-  const [flips, setFlips] = useState(+localStorageGet('flips') || 0)
-  const [streak, setStreak] = useState(+localStorageGet('streak') || 0)
-  const [highScore, setHighScore] = useState(+localStorageGet('highScore') || 0)
-  const [coinState, setCoinState] = useState(localStorageGet('coinState') || 'heads')
+  const [flips, setFlips] = useState(0)
+  const [streak, setStreak] = useState(0)
+  const [highScore, setHighScore] = useState(0)
+  const [coinState, setCoinState] = useState('heads')
+
+  React.useEffect( ()=> {
+    setFlips(+localStorageGet('flips') || 0)
+    setStreak(+localStorageGet('streak') || 0)
+    setHighScore(+localStorageGet('highScore') || 0)
+    setCoinState(localStorageGet('coinState') || 'heads')
+  }, [])
 
   const changeFlips = (amt) => {
     setFlips(amt)
