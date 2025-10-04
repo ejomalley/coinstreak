@@ -11,18 +11,17 @@ export default function Home() {
     return (typeof window !== 'undefined') ? localStorage.setItem(key, value) : undefined
   }
   const [flips, setFlips] = useState(0)
+  const [heads, setHeads] = useState(0)
   const [streak, setStreak] = useState(0)
   const [highScore, setHighScore] = useState(0)
-  const [coinState, setCoinState] = useState('heads')
-
-  const [heads, setHeads] = useState(0)
-  // const [tails, setTails] = useState(0)
   const [tailsStreak, setTailsStreak] = useState(0)
-
+  const [coinState, setCoinState] = useState('heads')
   const [showOdds, setShowOdds] = useState(false)
 
   const font = "font-serif text-lg mt-5 text-black"
 
+  /*  On page load, attempt to restore saved values.
+      If there are no saved values, set to default.  */
   React.useEffect( ()=> {
     setFlips(+localStorageGet('flips') || 0)
     setStreak(+localStorageGet('streak') || 0)
@@ -33,69 +32,51 @@ export default function Home() {
     setShowOdds(localStorageGet('showOdds') || false)
   }, [])
 
-  const changeFlips = (amt) => {
-    setFlips(amt)
-    localStorageSet('flips', amt)
-  }
-
-  const changeHeads = (amt) => {
-    setHeads(amt)
-    localStorageSet('heads', amt)
-  }
-
-  const changeTailsStreak = (amt) => {
-    setTailsStreak(amt)
-    localStorageSet('tailsStreak', amt)
-  }
-
-  const changeStreak = (amt) => {
-    setStreak(amt)
-    localStorageSet('streak', amt)
-    if (amt > highScore) changeHighScore(amt)
-  }
-
-  const changeHighScore = (amt) => {
-    setHighScore(amt)
-    localStorageSet('highScore', amt)
-  }
-
-  const changeCoinState = (state) => {
-    setCoinState(state)
-    localStorageSet('coinState', state)
-  }
-
-  const changeShowOdds = (yn) => {
-    setShowOdds(yn)
-    localStorageSet('showOdds', yn)
-  }
-
-  const handleShowOddsBox = (event) => {
-    changeShowOdds(event.target.checked)
-    console.log("got to handler")
-  }
-
-  const handleResetButton = () => {
-    changeFlips(0)
-    changeStreak(0)
-    changeHighScore(0)
-    changeCoinState('heads')
-    changeHeads(0)
-    changeTailsStreak(0)
-    changeShowOdds(false)
-  }
-
-  const coinClick = () => {
-    changeFlips(flips+1)
-    if (Math.random() > .5) {
-      changeCoinState("heads")
-      changeHeads(heads+1)
-      changeStreak(streak+1)
-      changeTailsStreak(0)
+  /* Change the given value and store it in local storage */
+  const changeValue = (which, val) => {
+    switch(which) {
+      case 'flips': setFlips(val); break
+      case 'heads': setHeads(val); break
+      case 'streak': setStreak(val); if (val <= highScore) break
+      case 'highScore': setHighScore(val); break
+      case 'tailsStreak': setTailsStreak(val); break
+      case 'coinState': setCoinState(val); break
+      case 'showOdds': setShowOdds(val); break
     }
+
+    localStorageSet(which, val)
+  }
+
+  /* When "show odds" checkbox is clicked, show/hide component */
+  const handleShowOddsBox = (event) => { changeValue('showOdds', event.target.checked) }
+
+  /* When reset button is pressed, return stored values to default */
+  const handleResetButton = () => {
+    changeValue('flips', 0)
+    changeValue('streak', 0)
+    changeValue('highScore', 0)
+    changeValue('coinState', 'heads')
+    changeValue('heads', 0)
+    changeValue('tailsStreak', 0)
+    changeValue('showOdds', false)
+  }
+
+  /* When coin is clicked, flip and adjust values accordingly */
+  const coinClick = () => {
+    changeValue('flips', flips+1)               // number of flips increases by 1             
+
+    // if coin is heads
+    if (Math.random() > .5) {
+      changeValue('coinState', 'heads')         // coin state becomes heads (changes coin image)
+      changeValue('heads', heads+1)             // number of heads flipped increases by 1
+      changeValue('streak', streak+1)           // current heads streak starts or continues
+      changeValue('tailsStreak', 0)             // current tails streak ends
+    }
+    // if tails
     else {
-      changeCoinState("tails")
-      changeStreak(0)
-      changeTailsStreak(tailsStreak+1)
+      changeValue('coinState', 'tails')         // coin state becomes tails (changes coin image)
+      changeValue('streak', 0)                  // current heads streak ends
+      changeValue('tailsStreak', tailsStreak+1) // current tails streak starts or continues
     }
   } 
 
