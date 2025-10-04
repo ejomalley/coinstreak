@@ -113,7 +113,7 @@ export default function Home() {
         { showOdds ? <p className={font}>odds of next head: { (coinState==='heads') ? +((Math.pow(.5, streak+1))*100).toPrecision(4) : 
           +((1 - (Math.pow(0.5, tailsStreak)))*100).toPrecision(4) }%</p> : null }
       </div>
-      <div className='flex self-center items-center'>
+      <div className='flex self-center items-center pb-10 mb-10'>
         <input type='checkbox' checked={!!showOdds} onChange={handleShowOddsBox}></input>
         <p className='pl-2'>Show Odds</p>
         <button className='bg-gray-50 w-15 self-center ml-40' onClick={handleResetButton}>Reset</button>
